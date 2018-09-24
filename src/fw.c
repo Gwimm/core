@@ -5,11 +5,11 @@
 #include <xcb/xcb_aux.h>
 #include <err.h>
 
-#include "util.h"
+#include "com.h"
 
 static xcb_connection_t *conn;
 
-static void usage (char *);
+static void usage(void);
 
 int main(int argc, char **argv) {
 	xcb_window_t win;
@@ -32,7 +32,6 @@ int main(int argc, char **argv) {
 	return 0;
 }
 
-static void usage(char *name) {
-	fprintf(stderr, "usage: %s <wid>\n", name);
-	exit(1);
+static void usage(void) {
+	die("usage: fw <wid>\n");
 }
