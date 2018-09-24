@@ -4,7 +4,7 @@
 #include <xcb/xcb_aux.h>
 #include <err.h>
 
-#include "util.h"
+#include "com.h"
 
 enum {
 	ABSOLUTE = 0,
@@ -14,13 +14,14 @@ enum {
 static xcb_connection_t *conn;
 static xcb_screen_t *scr;
 
-static void usage(char *);
+static void usage(void);
 static void move(xcb_window_t, int, int, int);
 
 int main(int argc, char **argv) {
 	int x, y, mode = RELATIVE;
+
 	if (argc < 4)
-		usage(argv[0]);
+		usage();
 
 	init_xcb(&conn);
 	get_screen(conn, &scr);
@@ -43,9 +44,8 @@ int main(int argc, char **argv) {
 	return 0;
 }
 
-static void usage(char *name) {
-	fprintf(stderr, "usage: %s [-a] <x> <y> <win>\n", name);
-	exit(1);
+static void usage(void) {
+	die("usage: mvw [-a] <x> <y> <win>\n");
 }
 
 static void move(xcb_window_t win, int mode, int x, int y) {
@@ -57,8 +57,9 @@ static void move(xcb_window_t win, int mode, int x, int y) {
 		return;
 
 	geom = xcb_get_geometry_reply(conn, xcb_get_geometry(conn, win), NULL);
-	if (!geom)
+	if (!geom) {
 		return;
+    }
 
 	if (mode == ABSOLUTE) {
 		x -= geom->x + geom->width /2;
@@ -67,8 +68,7 @@ static void move(xcb_window_t win, int mode, int x, int y) {
 	values[0] = x ? geom->x + x : geom->x;
 	values[1] = y ? geom->y + y : geom->y;
 
-	if (x)
-	{
+	if (x) {
 		real = geom->width + (geom->border_width * 2);
 		if (geom->x + x < 1)
 			values[0] = 0;
@@ -76,8 +76,7 @@ static void move(xcb_window_t win, int mode, int x, int y) {
 			values[0] = scr->width_in_pixels - real;
 	}
 
-	if (y)
-	{
+	if (y) {
 		real = geom->height + (geom->border_width * 2);
 		if (geom->y + y < 1)
 			values[1] = 0;

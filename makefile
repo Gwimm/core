@@ -11,18 +11,22 @@ BUILDPREFIX ?= build
 DOCPREFIX ?= doc
 
 PREFIX = /usr
-MANPREFIX ?= $(PREFIX)/share/man
-BINPREFIX ?= $(PREFIX)/bin
+MANPREFIX = $(PREFIX)/share/man
+BINPREFIX = $(PREFIX)/bin
+
+# BINPREFIX = ~/bin/prog
 
 MAN := $(wildcard $(DOCPREFIX)/*.1)
 
 SRC := $(wildcard $(SRCPREFIX)/*.c)
 OBJ := $(subst $(SRCPREFIX), $(BUILDPREFIX), $(SRC:.c=.o))
 
-TARGETS := $(filter-out $(BUILDPREFIX)/util, $(OBJ:.o=))
-DEPS := $(BUILDPREFIX)/util.o
+TARGETS := $(filter-out $(BUILDPREFIX)/com, $(OBJ:.o=))
+DEPS := $(BUILDPREFIX)/com.o
 
-all: prepare $(TARGETS)
+all: prepare build
+	
+build: $(TARGETS)
 
 $(TARGETS): $(OBJ)
 	$(LD) -o $@ $(DEPS) $@.o $(LDFLAGS)
@@ -34,12 +38,12 @@ prepare:
 	mkdir -p $(BUILDPREFIX)
 
 clean:
-	rm -f $(BUILDPREFIX)
+	-rm -r $(BUILDPREFIX)
 
 install:
 	install -t $(DESTDIR)$(BINPREFIX) $(TARGETS)
 	install -t $(DESTDIR)$(MANPREFIX) $(MAN)
 
 uninstall:
-	rm -f $(DESTDIR)$(subst $(BUILDPREFIX), $(BINPREFIX), $(TARGETS))
-	rm -f $(DESTDIR)$(subst $(DOCPREFIX), $(MANPREFIX), $(MAN))
+	-rm $(DESTDIR)$(subst $(BUILDPREFIX), $(BINPREFIX), $(TARGETS))
+	-rm $(DESTDIR)$(subst $(DOCPREFIX), $(MANPREFIX), $(MAN))

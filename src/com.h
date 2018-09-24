@@ -1,5 +1,5 @@
-#ifndef UTIL_H
-#define UTIL_H
+#ifndef COM_H
+#define COM_H
 
 void init_xcb(xcb_connection_t **);
 void kill_xcb(xcb_connection_t **);
@@ -13,4 +13,4 @@ int ignore(xcb_connection_t *, xcb_window_t);
 
 void die(const char *errstr, ...);
 
-#endif // UTIL_H
+#endif // COM_H
