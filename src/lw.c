@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
     int listmask=0;
     char mode, arg;
 
-    while ((arg = getopt(argc, argv, "auorc")) != -1) {
+    while ((arg = getopt(argc, argv, "auorch")) != -1) {
         switch(arg) {
             case 'a':
                 listmask |= LIST_ALL;
@@ -71,16 +71,13 @@ int main(int argc, char *argv[]) {
 
 static void usage(void) {
     die("list windows\n"
-        "lsw [-oura] [wid...]\n");
+        "lw [-auorc] [wid...]\n");
 }
 
 static int should_list(xcb_window_t w, int mask) {
-    if ((mask & LIST_ALL)
-        || (!mapped(conn, w) && mask & LIST_HIDDEN)
-        || (ignore(conn, w) && mask & LIST_IGNORE)
-        || (mapped(conn, w)
-            && !ignore(conn, w)
-            && mask == 0))
+    if ((mask & LIST_ALL) || (!mapped(conn, w) && mask & LIST_HIDDEN)
+            || (ignore(conn, w) && mask & LIST_IGNORE) || (mapped(conn, w)
+                && !ignore(conn, w) && mask == 0))
         return 1;
 
     return 0;

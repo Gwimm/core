@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
     if (argc < 2)
         usage();
 
-    while ((arg = getopt(argc, argv, "p")) != -1) {
+    while ((arg = getopt(argc, argv, "ph")) != -1) {
         switch(arg) {
             case 'p':
                 parent = 1;

@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
 	xcb_window_t win;
 
 	if (argc != 2 || strncmp(argv[0], "-h", 2) == 0)
-		usage(argv[0]);
+		usage();
 
 	init_xcb(&conn);
 
