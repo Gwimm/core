@@ -3,8 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <err.h>
-
-#include <getopt.h>
+#include <unistd.h>
 
 #include "com.h"
 #include "xcb.h"

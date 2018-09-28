@@ -3,7 +3,7 @@
 #include <xcb/xcb.h>
 #include <xcb/xcb_aux.h>
 #include <err.h>
-#include <getopt.h>
+#include <unistd.h>
 
 #include "com.h"
 #include "xcb.h"
