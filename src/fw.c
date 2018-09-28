@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
 	xcb_window_t win;
 
 	if (argc != 2 || strncmp(argv[0], "-h", 2) == 0)
-		usage();
+	    die("usage: fw <wid>\n");
 
 	init_xcb(&conn);
 
@@ -31,8 +31,4 @@ int main(int argc, char **argv) {
 
 	kill_xcb(&conn);
 	return 0;
-}
-
-static void usage(void) {
-	die("usage: fw <wid>\n");
 }

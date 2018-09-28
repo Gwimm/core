@@ -23,7 +23,10 @@ int main(int argc, char *argv[]) {
     char arg;
     xcb_window_t w = 0;
 
-    while ((arg = getopt(argc, argv, "muth")) != -1) {
+    if (argc < 3)
+        usage();
+
+    while ((arg = getopt(argc, argv, "mutvh")) != -1) {
         switch(arg) {
             case 'm':
                 mapflag = MAP;
@@ -34,14 +37,12 @@ int main(int argc, char *argv[]) {
             case 't':
                 mapflag = TOGGLE;
                 break;
-            case 'h':
+            case 'v':
+                version();
             default:
-            usage();
+                usage();
         }
     }
-
-    if (argc < 1 || mapflag == 0)
-        usage();
 
     init_xcb(&conn);
 
@@ -73,5 +74,8 @@ int main(int argc, char *argv[]) {
 
 static void usage(void) {
     die("(un-)hide windows\n"
-        "usage: hw [-h] [-mut <wid> [wid..]]\n");
+        "usage: hw [-hvmut] [wid..]\n"
+        "   -m  -- map\n"
+        "   -u  -- unmap\n"
+        "   -t  -- toggle\n");
 }

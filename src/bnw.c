@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     if (argc < 2)
         usage();
 
-    while ((arg = getopt(argc, argv, "b:c:h")) != -1) {
+    while ((arg = getopt(argc, argv, "b:c:hv")) != -1) {
         switch(arg) {
             case 'b':
               temp = strtoul(optarg, NULL, 10);
@@ -57,6 +57,8 @@ int main(int argc, char *argv[]) {
             case 'c':
               colors[color_index++] = strtoul(optarg, NULL, 16);
               break;
+            case 'v':
+              version();
             default:
                 usage();
         }

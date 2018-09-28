@@ -11,7 +11,6 @@
 static xcb_connection_t *conn;
 static xcb_screen_t *scrn;
 
-static void usage(void);
 static int should_list(xcb_window_t, int);
 static xcb_window_t focused_window(void);
 static void list_windows(xcb_window_t, int);
@@ -23,10 +22,10 @@ enum {
 };
 
 int main(int argc, char *argv[]) {
-    int listmask=0;
-    char mode, arg;
+    int arg, listmask=0;
+    char mode;
 
-    while ((arg = getopt(argc, argv, "auorch")) != -1) {
+    while ((arg = getopt(argc, argv, "auorchv")) != -1) {
         switch(arg) {
             case 'a':
                 listmask |= LIST_ALL;
@@ -41,8 +40,11 @@ int main(int argc, char *argv[]) {
             case 'c':
                 mode=arg;
                 break;
+            case 'v':
+                version();
             default :
-                usage();
+                die("list windows\n"
+                    "lw [-auorc] [wid...]\n");
         }
     }
 
@@ -68,11 +70,6 @@ int main(int argc, char *argv[]) {
     kill_xcb(&conn);
 
     return 0;
-}
-
-static void usage(void) {
-    die("list windows\n"
-        "lw [-auorc] [wid...]\n");
 }
 
 static int should_list(xcb_window_t w, int mask) {

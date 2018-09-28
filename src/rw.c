@@ -3,6 +3,7 @@
 #include <xcb/xcb.h>
 #include <xcb/xcb_aux.h>
 #include <err.h>
+#include <unistd.h>
 
 #include "com.h"
 #include "xcb.h"
@@ -15,37 +16,40 @@ enum {
 static xcb_connection_t *conn;
 static xcb_screen_t *scr;
 
-static void usage(void);
 static void resize(xcb_window_t, int, int, int);
 
 int main(int argc, char *argv[]) {
-	int x, y, mode = RELATIVE;
+	int arg, x, y, mode = RELATIVE;
+
 	if (argc < 4)
-		usage();
+        die("usage: rw [-a] <x> <y> [wid..]\n");
+
+    while ((arg = getopt(argc, argv, "avh")) != -1) {
+        switch(arg) {
+            case 'a':
+		        mode = ABSOLUTE;
+                break;
+            case 'v':
+                version();
+            default :
+                die("usage: rw [-a] <x> <y> <wid> [wid..]\n");
+        }
+    }
 
 	init_xcb(&conn);
 	get_screen(conn, &scr);
 
-	if (argv[1][0] == '-' && argv[1][1] == 'a') {
-		mode = ABSOLUTE;
-		argv++;
-	}
+	x = atoi(argv[++optind]);
+	y = atoi(argv[++optind]);
 
-	x = atoi(*(++argv));
-	y = atoi(*(++argv));
-
-	while (*argv)
-		resize(strtoul(*argv++, NULL, 16), mode, x, y);
+	while (optind < argc)
+		resize(strtoul(argv[optind++], NULL, 16), mode, x, y);
 
 	xcb_aux_sync(conn);
 
 	kill_xcb(&conn);
 
 	return 0;
-}
-
-static void usage(void) {
-    die("usage: %s [-a] <x> <y> <wid> [wid..]\n");
 }
 
 static void resize(xcb_window_t w, int mode, int x, int y) {

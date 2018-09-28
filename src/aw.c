@@ -5,6 +5,8 @@
 #include <xcb/xcb_aux.h>
 #include <err.h>
 
+#include <getopt.h>
+
 #include "com.h"
 #include "xcb.h"
 
@@ -21,22 +23,34 @@ enum {
     ATTR_MAX
 };
 
-static void usage(void);
 static int get_attribute(xcb_window_t, int);
 
-int main(int argc, char **argv) {
-    int c, ret = 0;
+int main(int argc, char *argv[]) {
+    int arg, attr, ret, attrflag;
     size_t i;
-    xcb_window_t w = 0;
+    xcb_window_t w;
 
-    if (argc <= 2 || (strncmp(argv[1], "-h", 2) == 0)) {
-        usage();
+    ret = attrflag = w = 0;
+
+    if (argc <= 2)
+        die("attributes of window\n"
+            "aw [-vh] [bmiowhxy] [wid...]\n");
+
+
+    while ((arg = getopt(argc, argv, "vh")) != -1) {
+        switch(arg) {
+            case 'v':
+                version();
+            default :
+                die("attributes of window\n"
+                    "aw [-vh] [bmiowhxy] [wid...]\n");
+        }
     }
 
     init_xcb(&conn);
 
-    for (c=2; argv[c]; c++) {
-        w = strtoul(argv[c], NULL, 16);
+    for (attr=2; argv[attr]; attr++) {
+        w = strtoul(argv[attr], NULL, 16);
 
         for (i=0; i<strlen(argv[1]); i++) {
             switch (argv[1][i]) {
@@ -66,21 +80,17 @@ int main(int argc, char **argv) {
                     goto end;
                 default:
                     kill_xcb(&conn);
-                    usage();
+                    die("usage: aw [-h] [bmiowhxy] <wid>\n");
             }
             /* add a space if more attribute come after */
             putc(i+1 < strlen(argv[1]) ? ' ' : '\n',stdout);
         }
     }
-
 end:
+
     kill_xcb(&conn);
 
     return ret;
-}
-
-static void usage(void) {
-    die("usage: aw [-h] [bmiowhxy] <wid>\n");
 }
 
 static int get_attribute(xcb_window_t w, int attr) {

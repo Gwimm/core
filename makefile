@@ -8,17 +8,16 @@ OBJ := $(subst $(SRCPREFIX), $(BUILDPREFIX), $(SRC:.c=.o))
 TARGETS := $(filter-out $(BUILDPREFIX)/com $(BUILDPREFIX)/xcb, $(OBJ:.o=))
 DEPS := $(filter-out $(TARGETS:=.o), $(OBJ))
 
-all: prepare build strip
+all: prepare build
 	
 build: $(TARGETS)
 
-strip:
-	$(STRIP) $(TARGETS)
-
 $(TARGETS): $(OBJ)
+	@printf "[34mLD[0m :: $@\n"
 	$(LD) -o $@ $(DEPS) $@.o $(LDFLAGS)
 
 $(BUILDPREFIX)/%.o: $(SRCPREFIX)/%.c
+	@printf "[32mCC[0m :: $@\n"
 	$(CC) -o $@ $(CFLAGS) -c $<
 
 prepare:

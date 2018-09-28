@@ -1,6 +1,5 @@
 CC ?= 	cc
 LD = 	$(CC)
-STRIP = strip
 
 SRCPREFIX ?= src
 BUILDPREFIX ?= build
@@ -10,8 +9,11 @@ PREFIX = /usr
 MANPREFIX = $(PREFIX)/share/man
 BINPREFIX = $(PREFIX)/bin
 
+VERSION = $(shell git describe --always --dirty)
 OPTFLAGS = -Os
-CFLAGS  = $(OPTFLAGS)
+CFLAGS  = $(OPTFLAGS) \
+		  -DVERSION=\"$(VERSION)\"
 
 LDLIBS = $(shell pkg-config --libs xcb-util)
-LDFLAGS = $(LDLIBS)
+LDFLAGS = -s \
+		  $(LDLIBS)

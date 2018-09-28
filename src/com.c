@@ -12,3 +12,7 @@ void die(const char *errstr, ...) {
     exit(1);
 }
 
+void version(void) {
+    puts("split-"VERSION);
+    exit(0);
+}
