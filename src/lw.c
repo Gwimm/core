@@ -6,6 +6,7 @@
 #include <getopt.h>
 
 #include "com.h"
+#include "xcb.h"
 
 static xcb_connection_t *conn;
 static xcb_screen_t *scrn;

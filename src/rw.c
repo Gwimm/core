@@ -4,7 +4,8 @@
 #include <xcb/xcb_aux.h>
 #include <err.h>
 
-#include "util.h"
+#include "com.h"
+#include "xcb.h"
 
 enum {
 	ABSOLUTE = 0,

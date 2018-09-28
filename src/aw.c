@@ -6,6 +6,7 @@
 #include <err.h>
 
 #include "com.h"
+#include "xcb.h"
 
 static xcb_connection_t *conn;
 

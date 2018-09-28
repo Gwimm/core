@@ -7,6 +7,7 @@
 #include <getopt.h>
 
 #include "com.h"
+#include "xcb.h"
 
 #define MAX(A, B)               ((A) > (B) ? (A) : (B))
 #define MIN(A, B)               ((A) < (B) ? (A) : (B))

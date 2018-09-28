@@ -5,6 +5,7 @@
 #include <err.h>
 
 #include "com.h"
+#include "xcb.h"
 
 enum {
 	ABSOLUTE = 0,

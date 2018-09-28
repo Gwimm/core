@@ -6,6 +6,7 @@
 #include <getopt.h>
 
 #include "com.h"
+#include "xcb.h"
 
 enum {
     MAP     = 1 << 0,

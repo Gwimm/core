@@ -1,32 +1,19 @@
-CC ?= 	cc
-LD = 	$(CC)
-
-OPTFLAGS = -Os
-CFLAGS  = $(OPTFLAGS) \
-		  -std=c99 -pedantic -Wall
-LDFLAGS = -lxcb -lxcb-util
-
-SRCPREFIX ?= src
-BUILDPREFIX ?= build
-DOCPREFIX ?= doc
-
-PREFIX = /usr
-MANPREFIX = $(PREFIX)/share/man
-BINPREFIX = $(PREFIX)/bin
-
-# BINPREFIX = ~/bin/prog
+include conf.mk
 
 MAN := $(wildcard $(DOCPREFIX)/*.1)
 
 SRC := $(wildcard $(SRCPREFIX)/*.c)
 OBJ := $(subst $(SRCPREFIX), $(BUILDPREFIX), $(SRC:.c=.o))
 
-TARGETS := $(filter-out $(BUILDPREFIX)/com, $(OBJ:.o=))
-DEPS := $(BUILDPREFIX)/com.o
+TARGETS := $(filter-out $(BUILDPREFIX)/com $(BUILDPREFIX)/xcb, $(OBJ:.o=))
+DEPS := $(filter-out $(TARGETS:=.o), $(OBJ))
 
-all: prepare build
+all: prepare build strip
 	
 build: $(TARGETS)
+
+strip:
+	$(STRIP) $(TARGETS)
 
 $(TARGETS): $(OBJ)
 	$(LD) -o $@ $(DEPS) $@.o $(LDFLAGS)
